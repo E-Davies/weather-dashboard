@@ -8,3 +8,4 @@
 * jQuery
 * Day.js
 * API
+* Local Storage
