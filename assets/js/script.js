@@ -8,18 +8,18 @@ renderLocalStorage();
 $('#search-button').on('click', function(event){
     event.preventDefault();
     let citySearched = $('#search-input').val();
-    cityQueryURL(citySearched); //run the fetch with the city the user searched
+    fetchCityForecast(citySearched); //run the fetch with the city the user searched
 });
 
 $('#clear-button').on('click', function(event){
     event.preventDefault();
     localStorage.clear();
-    $('.btn-secondary').remove();
+    $('.history-btns').empty();
     storedCity = [];
 });
 
 
-function cityQueryURL(city){
+function fetchCityForecast(city){
     
     let queryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&units=metric&appid=6b4a10c6ed815160709463b2908e2d4d";
 
@@ -102,9 +102,9 @@ function renderWeather(city, properDate, weatherIcon, temp, wind, humidity){
 
 function searchHistoryBtn(city){
     let newBtn = $('<button>');
-    newBtn.attr({'class': 'btn search-button btn-secondary col-12 mt-2 me-2', 'data-city': `${city}`});
+    newBtn.attr({'class': 'btn btn-secondary col-12 mt-2', 'data-city': `${city}`});
     newBtn.text(`${city}`);
-    $('.input-group-append').append(newBtn);
+    $('.history-btns').append(newBtn);
 };
 
 function storeSearchHistory(city){
@@ -119,12 +119,11 @@ function renderLocalStorage(){
     };
 };
 
-/**********************************************************************/
-
-$('.btn-secondary').on('click', function(event){ //.input-group-append
+//bring up the city forecast when a history button is clicked
+$('.btn-secondary').on('click', function(event){ 
     event.preventDefault();
     let target = event.target.dataset.city;
-    cityQueryURL(target);
+    fetchCityForecast(target);
 })
 
 /**********************************************************************/
@@ -132,4 +131,6 @@ $('.btn-secondary').on('click', function(event){ //.input-group-append
 
 //DONE save searched city to local storage
 //DONE create a button for each city searched/saved
-//pull the info for the saved city if it's button is clicked
+//DONE pull the info for the saved city if it's button is clicked
+// how to centre my history btns?
+// fix bug where by when a new history btn is added and then you click it - it seems to refresh the screen..?

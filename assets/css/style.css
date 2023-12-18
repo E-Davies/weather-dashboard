@@ -2,3 +2,15 @@ body{
    margin: 0;
    padding: 0;
 }
+
+/* #search-form{
+   justify-content: center;
+} */
+
+.history-btns{
+   height: 374px;
+   /* width: 280px; */
+   overflow: auto;
+   margin: auto;
+   padding: 0;
+}
