@@ -11,6 +11,13 @@ $('#search-button').on('click', function(event){
     cityQueryURL(citySearched); //run the fetch with the city the user searched
 });
 
+$('#clear-button').on('click', function(event){
+    event.preventDefault();
+    localStorage.clear();
+    $('.btn-secondary').remove();
+    storedCity = [];
+});
+
 
 function cityQueryURL(city){
     
@@ -91,7 +98,7 @@ function renderWeather(city, properDate, weatherIcon, temp, wind, humidity){
     // };
 };
 
-
+/****************************** LOCAL STORAGE & HISTORY ****************************************/
 
 function searchHistoryBtn(city){
     let newBtn = $('<button>');
@@ -110,10 +117,18 @@ function renderLocalStorage(){
     for(let i = 0; i < storedCity.length; i++){
         searchHistoryBtn(storedCity[i]);
     };
-
 };
 
 /**********************************************************************/
+
+$('.btn-secondary').on('click', function(event){ //.input-group-append
+    event.preventDefault();
+    let target = event.target.dataset.city;
+    cityQueryURL(target);
+})
+
+/**********************************************************************/
+
 
 //DONE save searched city to local storage
 //DONE create a button for each city searched/saved
