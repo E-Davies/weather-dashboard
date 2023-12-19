@@ -65,6 +65,9 @@ function fetchCityForecast(city){
             createSearchHistoryBtn(apiCity);
             storeSearchHistory(apiCity);
         }; 
+    }).catch(function(){
+        today.css('border', '1px solid black');
+        today.append($('<h5>').text('Incorrect input, please try again.').css('color', 'red'))
     });
 };
 
@@ -136,7 +139,6 @@ $('.btn-secondary').on('click', function(event){
 })
 
 /********************************************************************************************/
-
 
 // fix bug where by when a new history btn is added and then you click it - it seems to refresh the screen..?
 // check comments
