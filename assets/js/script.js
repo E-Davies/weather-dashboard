@@ -22,8 +22,8 @@ $('#clear-button').on('click', function(event){
 
 
 function fetchCityForecast(city){
-    forecast.empty(); //move elsewhere?
-    today.empty(); //move elsewhere?
+    forecast.empty(); 
+    today.empty(); 
 
     let queryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&units=metric&appid=6b4a10c6ed815160709463b2908e2d4d";
 
@@ -31,11 +31,12 @@ function fetchCityForecast(city){
     .then(function(response){
         return response.json();
     }).then(function(data){
-        console.log(data);
+        // console.log(data);
+
+        let apiCity = data.city.name;
 
         for(let i = 0; i < data.list.length; i++){
 
-            let city = data.city.name;
             let apiDate = data.list[i].dt_txt.substr(0, 10); //.substr(0, 10) keeps the first 10 characters of the string so from this: 2023-12-18 12:00:00 to this: 2023-12-18
             let properDate = dayjs(`${apiDate}`, `YYYY-MM-DD`).format(`(DD/MM/YYYY)`); // converts the API date to a different format
             let weatherIcon = `https://openweathermap.org/img/w/${data.list[i].weather[0].icon}.png`;
@@ -50,19 +51,19 @@ function fetchCityForecast(city){
                 const forecast5Day = $('<h2>');
                 forecast5Day.text('5-Day Forecast:');
                 forecast.append(forecast5Day);
-                renderWeather(day, city, properDate, weatherIcon, temp, wind, humidity);
+                renderWeather(day, apiCity, properDate, weatherIcon, temp, wind, humidity);
                 isToday = false;
             }else if (!isToday && (time == 12) ){
-                renderWeather(day, city, properDate, weatherIcon, temp, wind, humidity);
+                renderWeather(day, apiCity, properDate, weatherIcon, temp, wind, humidity);
             }
         };
-        isToday = true; 
+        isToday = true; //after for loop runs, change isToday back to true so when fetchCityForecast() runs again, the today section is rendered
 
-        if(storedCity.includes(city)){
-            return
+        if(storedCity.includes(apiCity)){
+            return // prevents duplicate history btns being made
         }else{
-            createSearchHistoryBtn(city);
-            storeSearchHistory(city);
+            createSearchHistoryBtn(apiCity);
+            storeSearchHistory(apiCity);
         }; 
     });
 };
@@ -93,7 +94,7 @@ function renderWeather(day, city, properDate, weatherIcon, temp, wind, humidity)
         today.append(newH2, newTemp, newWind, newHumidity);
     }else{
         const newDiv = $('<div>');
-        newDiv.attr({'id': `day-${day}-weather`, 'class': 'col-lg-2 m-2'}); 
+        newDiv.attr({'id': `day-${day}-weather`, 'class': 'col-lg-2 mx-auto my-1'}); 
         newDiv.css({'background-color': '#304356', 'color': 'white', 'border-radius': '5px'});
 
         const newH5 = $('<h5>');
@@ -130,12 +131,14 @@ function renderLocalStorage(){
 $('.btn-secondary').on('click', function(event){ 
     event.preventDefault();
     let target = event.target.dataset.city;
+    console.log(event.target);
     fetchCityForecast(target);
 })
 
 /********************************************************************************************/
 
 
-// how to centre my 5-day forecast divs?
 // fix bug where by when a new history btn is added and then you click it - it seems to refresh the screen..?
-//fix bug where history btn = user input rather than API city name
+// fix responsive design
+// check comments
+// write README

@@ -4,8 +4,9 @@
 
 * HTML
 * CSS
+* Bootstrap
 * JavaScript
 * jQuery
 * Day.js
-* API
+* Server API
 * Local Storage
