@@ -2,7 +2,7 @@
 const today = $('#today'); //selecting the section to append a div etc for today's forecast
 const forecast = $('#forecast'); // selecting the section to append a div etc to the rest of the forecast
 let storedCity = [];
-let i = 0;
+// let i = 0;
 let isToday = true;
 
 renderLocalStorage();
@@ -22,7 +22,9 @@ $('#clear-button').on('click', function(event){
 
 
 function fetchCityForecast(city){
-    
+    forecast.empty(); //move elsewhere?
+    today.empty(); //move elsewhere?
+
     let queryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&units=metric&appid=6b4a10c6ed815160709463b2908e2d4d";
 
     fetch(queryURL)
@@ -40,18 +42,10 @@ function fetchCityForecast(city){
             let wind = (data.list[i].wind.speed * 2.237).toFixed(2); //the api wind speed is meters per sec (MPS) so to get MPH = MPS * 2.237
             let temp = data.list[i].main.temp;
             let humidity = data.list[i].main.humidity;
-
-            console.log(data.list.length); //40 - the amount of forecast objects
-
-            let day = data.list[i].dt_txt.substr(8, 2); //to obtain the day from the date text of the API - to use to show only single day forecasts
-            console.log(day);
-
+            let day = data.list[i].dt_txt.substr(8, 2); //to obtain the day from the date text of the API - to use to add dates to id's
             let time = data.list[i].dt_txt.substr(11, 2); //to obtain the hour from the date text of the API - to use to show only midday forecasts
-            console.log(time);
 
             if(isToday){
-                forecast.empty(); //move elsewhere?
-                today.empty(); //move elsewhere?
                 today.css('border', '1px solid black');
                 const forecast5Day = $('<h2>');
                 forecast5Day.text('5-Day Forecast:');
@@ -62,11 +56,12 @@ function fetchCityForecast(city){
                 renderWeather(day, city, properDate, weatherIcon, temp, wind, humidity);
             }
         };
+        isToday = true; 
 
         if(storedCity.includes(city)){
             return
         }else{
-            searchHistoryBtn(city);
+            createSearchHistoryBtn(city);
             storeSearchHistory(city);
         }; 
     });
@@ -94,25 +89,25 @@ function renderWeather(day, city, properDate, weatherIcon, temp, wind, humidity)
         newH2.attr('id', `todays-date-${day}`);
         newH2.text(`${city} ${properDate}`);
         newH2.append(newImg); //adds img to the header
+
         today.append(newH2, newTemp, newWind, newHumidity);
     }else{
         const newDiv = $('<div>');
-        newDiv.attr({'id': `day-${day}-weather`, 'class': 'col-lg-3 m-1'}); 
-        newDiv.css({'background-color': 'blue', 'color': 'white'});
+        newDiv.attr({'id': `day-${day}-weather`, 'class': 'col-lg-2 m-2'}); 
+        newDiv.css({'background-color': '#304356', 'color': 'white', 'border-radius': '5px'});
 
-        const newH4 = $('<h4>');
-        newH4.attr('id', `date-${day}`);
-        newH4.text(`${city} ${properDate}`);
-        newH4.append(newImg); //adds img to the header
+        const newH5 = $('<h5>');
+        newH5.attr({'id': `date-${day}`, 'class': 'mt-2'});
+        newH5.text(`${properDate}`);
 
-        newDiv.append(newH4, newTemp, newWind, newHumidity);
+        newDiv.append(newH5,newImg, newTemp, newWind, newHumidity);
         forecast.append(newDiv);
     };
 };
 
 /****************************** LOCAL STORAGE & HISTORY ****************************************/
 
-function searchHistoryBtn(city){
+function createSearchHistoryBtn(city){
     let newBtn = $('<button>');
     newBtn.attr({'class': 'btn btn-secondary col-12 mt-2', 'data-city': `${city}`});
     newBtn.text(`${city}`);
@@ -127,7 +122,7 @@ function storeSearchHistory(city){
 function renderLocalStorage(){
     storedCity = (JSON.parse(localStorage.getItem('city')) || storedCity);
     for(let i = 0; i < storedCity.length; i++){
-        searchHistoryBtn(storedCity[i]);
+        createSearchHistoryBtn(storedCity[i]);
     };
 };
 
@@ -141,8 +136,6 @@ $('.btn-secondary').on('click', function(event){
 /********************************************************************************************/
 
 
-//DONE save searched city to local storage
-//DONE create a button for each city searched/saved
-//DONE pull the info for the saved city if it's button is clicked
-// how to centre my history btns?
+// how to centre my 5-day forecast divs?
 // fix bug where by when a new history btn is added and then you click it - it seems to refresh the screen..?
+//fix bug where history btn = user input rather than API city name
