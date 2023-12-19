@@ -94,11 +94,11 @@ function renderWeather(day, city, properDate, weatherIcon, temp, wind, humidity)
         today.append(newH2, newTemp, newWind, newHumidity);
     }else{
         const newDiv = $('<div>');
-        newDiv.attr({'id': `day-${day}-weather`, 'class': 'col-lg-2 mx-auto my-1'}); 
+        newDiv.attr({'id': `day-${day}-weather`, 'class': 'col-lg-2 mx-auto my-1 smaller-text'}); 
         newDiv.css({'background-color': '#304356', 'color': 'white', 'border-radius': '5px'});
 
         const newH5 = $('<h5>');
-        newH5.attr({'id': `date-${day}`, 'class': 'mt-2'});
+        newH5.attr({'id': `date-${day}`, 'class': 'mt-2 smaller-text'});
         newH5.text(`${properDate}`);
 
         newDiv.append(newH5,newImg, newTemp, newWind, newHumidity);
@@ -139,6 +139,5 @@ $('.btn-secondary').on('click', function(event){
 
 
 // fix bug where by when a new history btn is added and then you click it - it seems to refresh the screen..?
-// fix responsive design
 // check comments
 // write README
