@@ -3,7 +3,6 @@ body{
    padding: 0;
 }
 
-
 .history-btns{
    height: 373px;
    overflow: auto;
@@ -19,5 +18,4 @@ body{
    .smaller-text p{
       font-size: 12px;
    }
-
 }
