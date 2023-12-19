@@ -37,12 +37,6 @@ function fetchCityForecast(city){
 
         let apiCity = data.city.name;
 
-        let currentTime = dayjs().format('HH');
-        console.log(`Current time: ${currentTime}`);
-
-        // let startAPIDate = data.list[0].dt_txt.substr(0, 10)
-        // let properDate = dayjs(`${apiDate}`, `YYYY-MM-DD`).format(`DD/MM/YYYY`);
-
         for(let i = 0; i < data.list.length; i++){
 
             let apiDate = data.list[i].dt_txt.substr(0, 10); //.substr(0, 10) keeps the first 10 characters of the string so from this: 2023-12-18 12:00:00 to this: 2023-12-18
@@ -61,9 +55,7 @@ function fetchCityForecast(city){
                 forecast5Day.text('5-Day Forecast:');
                 forecast.append(forecast5Day);
                 renderWeather(day, apiCity, properDate, weatherIcon, temp, wind, humidity);
-                isToday = false; // changes to false so that on the next loop it will render the next date
-            // }else if(!isToday && (currentTime < 12)){
-
+                isToday = false; // changes to false so that on the next loop it will render the else if statement
             }else if (!isToday && (time == 12) ){ //this will render 12pm forecasts for other dates that aren't today's date
                 renderWeather(day, apiCity, properDate, weatherIcon, temp, wind, humidity);
             }
@@ -141,16 +133,15 @@ function renderLocalStorage(){
     };
 };
 
+
 //bring up the city forecast when a history button is clicked
-$('.btn-secondary').on('click', function(event){ 
+$('.history-btns').on('click', '.btn-secondary', function(event){ 
     event.preventDefault();
     let target = event.target.dataset.city;
-    console.log(event.target);
+    console.log(target);
     fetchCityForecast(target);
 })
 
 /********************************************************************************************/
 
-// fix bug where by when a new history btn is added and then you click it - it seems to refresh the screen..?
-// check comments
-// write README
+
