@@ -9,7 +9,7 @@ renderLocalStorage();
 $('#search-button').on('click', function(event){
     event.preventDefault();
     let citySearched = $('#search-input').val();
-    fetchCityForecast(citySearched); //run the fetch with the city the user searched
+    fetchCityLatLon(citySearched) //run the fetch with the city the user searched
 });
 
 $('#clear-button').on('click', function(event){
@@ -22,14 +22,37 @@ $('#clear-button').on('click', function(event){
     storedCity = [];
 });
 
+let cityLat;
+let cityLon;
 
-function fetchCityForecast(city){
+
+function fetchCityLatLon(city){ //this fetch takes the users city input and pulls the coordinates
     forecast.empty(); 
-    today.empty(); 
+    today.empty();
 
-    let queryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&units=metric&appid=6b4a10c6ed815160709463b2908e2d4d";
+    let queryCityURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&units=metric&appid=6b4a10c6ed815160709463b2908e2d4d";
 
-    fetch(queryURL)
+    fetch(queryCityURL)
+    .then(function(response){
+        return response.json();
+    }).then(function(data){
+    
+        cityLat = data.city.coord.lat;
+        cityLon = data.city.coord.lon;
+
+        fetchCityForecast(cityLat, cityLon); //calls the next fetch using the coordinates
+
+    }).catch(function(){
+        today.css('border', '1px solid black');
+        today.append($('<h5>').text('Incorrect input, please try again.').css('color', 'red'))
+    });
+};
+
+function fetchCityForecast(cityLat, cityLon){ //this fetch uses coordinates 
+
+    let queryLatLonURL = "https://api.openweathermap.org/data/2.5/forecast?lat=" + cityLat + "&lon=" + cityLon + "&units=metric&appid=6b4a10c6ed815160709463b2908e2d4d";
+
+    fetch(queryLatLonURL)
     .then(function(response){
         return response.json();
     }).then(function(data){
@@ -56,7 +79,7 @@ function fetchCityForecast(city){
                 forecast.append(forecast5Day);
                 renderWeather(day, apiCity, properDate, weatherIcon, temp, wind, humidity);
                 isToday = false; // changes to false so that on the next loop it will render the else if statement
-            }else if (!isToday && (time == 12) ){ //this will render 12pm forecasts for other dates that aren't today's date
+            }else if (!isToday && (time == 09) ){ //this will render 12pm forecasts for other dates that aren't today's date
                 renderWeather(day, apiCity, properDate, weatherIcon, temp, wind, humidity);
             }
         };
@@ -68,9 +91,6 @@ function fetchCityForecast(city){
             createSearchHistoryBtn(apiCity);
             storeSearchHistory(apiCity);
         }; 
-    }).catch(function(){
-        today.css('border', '1px solid black');
-        today.append($('<h5>').text('Incorrect input, please try again.').css('color', 'red'))
     });
 };
 
@@ -138,8 +158,8 @@ function renderLocalStorage(){
 $('.history-btns').on('click', '.btn-secondary', function(event){ 
     event.preventDefault();
     let target = event.target.dataset.city;
-    console.log(target);
-    fetchCityForecast(target);
+    fetchCityLatLon(target)
+    // fetchCityForecast(target);
 })
 
 /********************************************************************************************/
