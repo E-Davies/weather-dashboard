@@ -79,7 +79,7 @@ function fetchCityForecast(cityLat, cityLon){ //this fetch uses coordinates
                 forecast.append(forecast5Day);
                 renderWeather(day, apiCity, properDate, weatherIcon, temp, wind, humidity);
                 isToday = false; // changes to false so that on the next loop it will render the else if statement
-            }else if (!isToday && (time == 09) ){ //this will render 12pm forecasts for other dates that aren't today's date
+            }else if (!isToday && (time == 09) ){ //this will render 9am forecasts for other dates that aren't today's date
                 renderWeather(day, apiCity, properDate, weatherIcon, temp, wind, humidity);
             }
         };
